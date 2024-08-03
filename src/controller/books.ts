@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 
-// import Book from "../models/Book";
-import Book from "@models/Book";
+import Book from "../models/Book";
+// import Book from "@models/Book";
 import auth from "../middlewares/auth";
 import {check, validationResult} from "express-validator";
 

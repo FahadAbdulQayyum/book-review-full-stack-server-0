@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 
+// @ts-ignore
 import User from "../models/User";
 // import User from "@models/User";
 import bcrypt from "bcrypt";

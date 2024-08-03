@@ -1,3 +1,4 @@
+// @ts-ignore
 import { IUser } from '../models/User';
 // import { IUser } from '@models/User';
 

@@ -1,12 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 
 import { Book } from "../models/Book";
-import bcrypt from "bcrypt";
-import {  sendCookie } from "../utils/features";
 import auth from "../middlewares/auth";
 import {check, validationResult} from "express-validator";
-import ErrorHandler from "../middlewares/error";
-// import { BookReview } from "../models/Book";
 
 // @routes GET api/books
 // @desc Get all the user's books    
@@ -27,7 +23,6 @@ export const getBooks = router.get('/', auth ,async (req: Request, res: Response
     }
 
     
-    // res.send('Gell all users books')
 })
 
 // @routes POST api/books
@@ -69,7 +64,6 @@ export const addBook = router.post('/', auth, [
     console.error(err.message)
     res.status(500).send('Server Error')
 }
-    // res.send('Add a book')
 })
 
 
@@ -86,7 +80,6 @@ interface BookProps {
     rating: number,
 }
 
-// export const updateBook = router.put('/', auth, async (req: Request, res: Response)=> {
 export const updateBook = async (req: Request, res: Response)=> {
     const {title, author, publicationYear, genre, bookReviewText, rating} = req.body
     console.log('req....body', req)
@@ -106,7 +99,6 @@ export const updateBook = async (req: Request, res: Response)=> {
     if(rating) bookFields.rating = rating
 
     try {
-        // let book = new Book(bookFields)
         let book = await Book.findById(req.params.id)
         if(!book) return res.status(404).json({msg: 'This contact does not exist'})
         if(book.user.toString() !== req.rawTrailers[0]) return res.status(403).json({msg: 'Not authorized to update this contact'})
@@ -116,24 +108,20 @@ export const updateBook = async (req: Request, res: Response)=> {
             {new: true}
         )
 
-        // show the updated book info
         res.json(book);
 
     } catch (err: any) {
         res.status(500).send('Server Error');
         console.error(err.message);
     }
-    
-    // res.send('Update a book')
+
 }
-// })
 
 
 // @routes DELETE api/books/:id
 // @desc Delete a book
 // @access Private
 
-// export const deleteBook = router.delete('/:id',auth , async (req: Request, res: Response)=> {
 export const deleteBook = async (req: Request, res: Response)=> {
 
     try {
@@ -144,5 +132,4 @@ export const deleteBook = async (req: Request, res: Response)=> {
         console.error(err)
     }
     
-    // res.send('Delete a book')
 }

@@ -2,11 +2,8 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IBook extends Document {
     _id: ObjectId;
-    // _id: mongoose.Types.ObjectId;
-    // userId: mongoose.Types.ObjectId;
     user: mongoose.Types.ObjectId;
     title: string;
-    // bookId: string;
     author: string;
     publicationYear: number;
     genre: string;
@@ -25,10 +22,6 @@ const BookSchema: Schema = new Schema({
         type: String,
         required: true,
     },
-    // bookId: {
-    //     type: String,
-    //     required: true,
-    // },
     author: {
         required: true,
         type: String,

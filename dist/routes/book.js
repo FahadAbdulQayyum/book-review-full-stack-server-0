@@ -7,8 +7,6 @@ const express_1 = __importDefault(require("express"));
 const books_1 = require("../controller/books");
 const auth_1 = __importDefault(require("../middlewares/auth"));
 const router = express_1.default.Router();
-// import {AddReview, UpdateReview, GetMyReviews, GetAllReviews, DeleteReview} from "../controller/books"
-// import { isAuthenticated } from "../middlewares/auth";
 router.get('/', books_1.getBooks)
     .post('/', books_1.addBook)
     .put('/:id', auth_1.default, books_1.updateBook)

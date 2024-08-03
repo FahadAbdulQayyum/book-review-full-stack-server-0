@@ -35,10 +35,6 @@ const BookSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    // bookId: {
-    //     type: String,
-    //     required: true,
-    // },
     author: {
         required: true,
         type: String,

@@ -19,7 +19,6 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_1 = __importDefault(require("../middlewares/auth"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
-// import { BookReview } from "../models/Book";
 const router = express_1.default.Router();
 // @routes GET api/auth
 // @desc Get the logged in user    
@@ -27,8 +26,6 @@ const router = express_1.default.Router();
 exports.getLoggedIn = router.get('/', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('welcome but...', req.rawTrailers[0]);
-        // const user = await User.findbyId(req.body.user.id).select('-password');
-        // const user = await User.findById(req.rawTrailers[0]).select('-password');
         const user = yield User_1.User.findById(req.rawTrailers[0]);
         res.json(user);
     }
@@ -36,7 +33,6 @@ exports.getLoggedIn = router.get('/', auth_1.default, (req, res) => __awaiter(vo
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-    // res.send('Get logged in user')
 }));
 // @routes POST api/auth
 // @desc Authorize user and get the token    
@@ -61,9 +57,7 @@ exports.login = router.post('/', [
             return res.status(400).json({ msg: 'Invalid password', success: false });
         }
         const payload = {
-            // user: {
             _id: user.id
-            // }
         };
         jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
             expiresIn: 360000
@@ -77,5 +71,4 @@ exports.login = router.post('/', [
         res.status(500).send('Server error');
         console.error(err.message);
     }
-    // res.send('Login the user')
 }));

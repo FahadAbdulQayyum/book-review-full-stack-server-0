@@ -2,12 +2,9 @@ import  express, { Request, Response, NextFunction } from "express";
 
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
-import { sendCookie } from "../utils/features";
 import auth from "../middlewares/auth";
 import jwt from "jsonwebtoken"
 import {check, validationResult} from "express-validator";
-import ErrorHandler from "../middlewares/error";
-// import { BookReview } from "../models/Book";
 
 const router = express.Router()
 
@@ -18,8 +15,6 @@ const router = express.Router()
 export const getLoggedIn = router.get('/', auth, async (req: Request, res: Response)=> {
     try {
         console.log('welcome but...', req.rawTrailers[0])
-        // const user = await User.findbyId(req.body.user.id).select('-password');
-        // const user = await User.findById(req.rawTrailers[0]).select('-password');
         const user = await User.findById(req.rawTrailers[0]);
         res.json(user)
 
@@ -28,7 +23,6 @@ export const getLoggedIn = router.get('/', auth, async (req: Request, res: Respo
         res.status(500).send('Server Error')
         
     }
-    // res.send('Get logged in user')
 })
 
 // @routes POST api/auth
@@ -62,9 +56,7 @@ export const login: any = router.post('/', [
         }
 
         const payload = {
-            // user: {
                 _id: user.id
-            // }
         }
 
         jwt.sign(payload, process.env.JWT_SECRET as string,{
@@ -79,5 +71,4 @@ export const login: any = router.post('/', [
         console.error(err.message); 
     }
 
-    // res.send('Login the user')
 })

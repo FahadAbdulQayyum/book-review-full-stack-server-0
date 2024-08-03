@@ -17,7 +17,6 @@ const express_1 = __importDefault(require("express"));
 const Book_1 = require("../models/Book");
 const auth_1 = __importDefault(require("../middlewares/auth"));
 const express_validator_1 = require("express-validator");
-// import { BookReview } from "../models/Book";
 // @routes GET api/books
 // @desc Get all the user's books    
 // @access Private
@@ -33,7 +32,6 @@ exports.getBooks = router.get('/', auth_1.default, (req, res) => __awaiter(void 
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-    // res.send('Gell all users books')
 }));
 // @routes POST api/books
 // @desc Add a new book    
@@ -68,9 +66,7 @@ exports.addBook = router.post('/', auth_1.default, [
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-    // res.send('Add a book')
 }));
-// export const updateBook = router.put('/', auth, async (req: Request, res: Response)=> {
 const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, author, publicationYear, genre, bookReviewText, rating } = req.body;
     console.log('req....body', req);
@@ -95,28 +91,23 @@ const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (rating)
         bookFields.rating = rating;
     try {
-        // let book = new Book(bookFields)
         let book = yield Book_1.Book.findById(req.params.id);
         if (!book)
             return res.status(404).json({ msg: 'This contact does not exist' });
         if (book.user.toString() !== req.rawTrailers[0])
             return res.status(403).json({ msg: 'Not authorized to update this contact' });
         book = yield Book_1.Book.findByIdAndUpdate(req.params.id, { $set: bookFields }, { new: true });
-        // show the updated book info
         res.json(book);
     }
     catch (err) {
         res.status(500).send('Server Error');
         console.error(err.message);
     }
-    // res.send('Update a book')
 });
 exports.updateBook = updateBook;
-// })
 // @routes DELETE api/books/:id
 // @desc Delete a book
 // @access Private
-// export const deleteBook = router.delete('/:id',auth , async (req: Request, res: Response)=> {
 const deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield Book_1.Book.findByIdAndDelete(req.params.id);
@@ -126,6 +117,5 @@ const deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send('Server Error');
         console.error(err);
     }
-    // res.send('Delete a book')
 });
 exports.deleteBook = deleteBook;

@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-
+// @ts-ignore
 import Book from "../models/Book";
 // import Book from "@models/Book";
 import auth from "../middlewares/auth";

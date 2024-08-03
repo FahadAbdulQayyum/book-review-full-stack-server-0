@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.getLoggedIn = void 0;
 const express_1 = __importDefault(require("express"));
-const User_1 = require("../models/User");
+const User_1 = __importDefault(require("../models/User"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_1 = __importDefault(require("../middlewares/auth"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -26,7 +26,7 @@ const router = express_1.default.Router();
 exports.getLoggedIn = router.get('/', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('welcome but...', req.rawTrailers[0]);
-        const user = yield User_1.User.findById(req.rawTrailers[0]);
+        const user = yield User_1.default.findById(req.rawTrailers[0]);
         res.json(user);
     }
     catch (err) {
@@ -48,7 +48,7 @@ exports.login = router.post('/', [
     const { email, password } = req.body;
     console.log('reqbodyyyy0', req.body);
     try {
-        let user = yield User_1.User.findOne({ email });
+        let user = yield User_1.default.findOne({ email });
         if (!user) {
             return res.status(400).json({ msg: "Invalid email", success: false });
         }

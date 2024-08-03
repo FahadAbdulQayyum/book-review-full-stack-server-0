@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBook = exports.updateBook = exports.addBook = exports.getBooks = void 0;
 const express_1 = __importDefault(require("express"));
-const Book_1 = require("../models/Book");
+const Book_1 = __importDefault(require("../models/Book"));
 const auth_1 = __importDefault(require("../middlewares/auth"));
 const express_validator_1 = require("express-validator");
 // @routes GET api/books
@@ -23,7 +23,7 @@ const express_validator_1 = require("express-validator");
 const router = express_1.default.Router();
 exports.getBooks = router.get('/', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const books = yield Book_1.Book.find({ user: req.rawTrailers[0] }).sort({
+        const books = yield Book_1.default.find({ user: req.rawTrailers[0] }).sort({
             date: -1
         });
         res.json(books);
@@ -50,7 +50,7 @@ exports.addBook = router.post('/', auth_1.default, [
     }
     const { title, author, publicationYear, genre, bookReviewText, rating } = req.body;
     try {
-        const newBook = new Book_1.Book({
+        const newBook = new Book_1.default({
             title,
             author,
             publicationYear,
@@ -91,12 +91,12 @@ const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (rating)
         bookFields.rating = rating;
     try {
-        let book = yield Book_1.Book.findById(req.params.id);
+        let book = yield Book_1.default.findById(req.params.id);
         if (!book)
             return res.status(404).json({ msg: 'This contact does not exist' });
         if (book.user.toString() !== req.rawTrailers[0])
             return res.status(403).json({ msg: 'Not authorized to update this contact' });
-        book = yield Book_1.Book.findByIdAndUpdate(req.params.id, { $set: bookFields }, { new: true });
+        book = yield Book_1.default.findByIdAndUpdate(req.params.id, { $set: bookFields }, { new: true });
         res.json(book);
     }
     catch (err) {
@@ -110,7 +110,7 @@ exports.updateBook = updateBook;
 // @access Private
 const deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield Book_1.Book.findByIdAndDelete(req.params.id);
+        yield Book_1.default.findByIdAndDelete(req.params.id);
         return res.status(200).json({ success: true, msg: 'Book deleted successfully' });
     }
     catch (err) {

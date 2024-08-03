@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = require("../models/User");
+const User_1 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.header('x-auth-token');
@@ -25,7 +25,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         console.log('decodeddd', decoded);
-        const user = yield User_1.User.findById(decoded._id).exec();
+        const user = yield User_1.default.findById(decoded._id).exec();
         console.log('userrrr', user);
         if (!user) {
             return res.status(404).json({

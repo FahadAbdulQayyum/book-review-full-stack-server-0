@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 const express_1 = __importDefault(require("express"));
-const User_1 = require("../models/User");
+const User_1 = __importDefault(require("../models/User"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
@@ -33,11 +33,11 @@ exports.register = router.post('/', [
     }
     const { name, email, password } = req.body;
     try {
-        let user = yield User_1.User.findOne({ email });
+        let user = yield User_1.default.findOne({ email });
         if (user) {
             return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
         }
-        user = new User_1.User({
+        user = new User_1.default({
             name, email, password
         });
         console.log('reigstration usre...', user);

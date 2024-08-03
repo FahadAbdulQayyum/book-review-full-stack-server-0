@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 3000;
 // Use CORS middleware before other middleware and routes
 app.use((0, cors_1.default)({
     // origin: 'https://book-review-platform-gold.vercel.app', // Replace with your front-end URL
-    origin: 'http://localhost:5173', // Replace with your front-end URL
+    // origin: 'http://localhost:5173', // Replace with your front-end URL
+    origin: '*', // Replace with your front-end URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));

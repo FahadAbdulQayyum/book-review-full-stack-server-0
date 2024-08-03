@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User, IUser } from "../models/user";
+import { User, IUser } from "../models/User";
 import jwt from "jsonwebtoken";
 // import { IIUser } from "../utils/features";
 
@@ -9,13 +9,14 @@ interface DecodedToken {
     exp: number;
 }
 
-export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization']
+export default async (req: Request, res: Response, next: NextFunction) => {
+    // const token = req.headers['authorization']
+    const token = req.header('x-auth-token')
 
     if (!token) {
-        return res.status(404).json({
+        return res.status(401).json({
             success: false,
-            message: "Login First",
+            msg: "Authorization denied, token missing",
         });
     }
 
@@ -23,23 +24,26 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken;
 
         console.log('decodeddd', decoded)
+        // const user = await User.findById(decoded.user._id).exec();
         const user = await User.findById(decoded._id).exec();
         console.log('userrrr', user)
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found",
+                msg: "User not found",
             });
         }
 
-        req.body.user = user;
+        // req.body.user = user;
+        req.rawTrailers.push(decoded._id)
+        // req.rawTrailers.push(decoded.user._id)
 
         next();
     } catch (error) {
         console.log('errorrrr', error)
         return res.status(401).json({
             success: false,
-            message: "Invalid Token",
+            msg: "Invalid Token",
         });
     }
 };

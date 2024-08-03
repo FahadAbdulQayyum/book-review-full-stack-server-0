@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const books_1 = require("../controller/books");
+const auth_1 = __importDefault(require("../middlewares/auth"));
 const router = express_1.default.Router();
-// import {getMyProfile, Login, register, Register, UpdateProfile} from "../controller/user"
-const user_1 = require("../controller/user");
+// import {AddReview, UpdateReview, GetMyReviews, GetAllReviews, DeleteReview} from "../controller/books"
 // import { isAuthenticated } from "../middlewares/auth";
-// router.get('/auth',isAuthenticated, getMyProfile)
-// router.post('/login', Login)
-// router.post('/signup', Register)
-// router.put('/update/:id', isAuthenticated, UpdateProfile)
-router.post('/', user_1.register);
+router.get('/', books_1.getBooks)
+    .post('/', books_1.addBook)
+    .put('/:id', auth_1.default, books_1.updateBook)
+    .delete('/:id', auth_1.default, books_1.deleteBook);
 exports.default = router;

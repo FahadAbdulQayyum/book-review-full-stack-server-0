@@ -23,23 +23,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookReview = void 0;
+exports.Book = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const BookReviewSchema = new mongoose_1.Schema({
-    userId: {
+const BookSchema = new mongoose_1.Schema({
+    user: {
         type: mongoose_1.default.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    bookName: {
+    title: {
         type: String,
         required: true,
     },
-    bookId: {
-        type: String,
+    // bookId: {
+    //     type: String,
+    //     required: true,
+    // },
+    author: {
         required: true,
+        type: String,
     },
-    bookAuthor: {
+    publicationYear: {
+        required: true,
+        type: Number,
+    },
+    genre: {
         required: true,
         type: String,
     },
@@ -47,13 +55,13 @@ const BookReviewSchema = new mongoose_1.Schema({
         required: true,
         type: String,
     },
-    bookRating: {
+    rating: {
         required: true,
-        type: String,
+        type: Number,
     },
     createdAt: {
         type: Date,
         default: Date.now,
     },
 });
-exports.BookReview = mongoose_1.default.model("BookReview", BookReviewSchema);
+exports.Book = mongoose_1.default.model("Book", BookSchema);

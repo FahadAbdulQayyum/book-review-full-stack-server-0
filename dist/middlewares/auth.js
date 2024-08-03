@@ -12,40 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAuthenticated = void 0;
-const user_1 = require("../models/user");
+const User_1 = require("../models/User");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers['authorization'];
+exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    // const token = req.headers['authorization']
+    const token = req.header('x-auth-token');
     if (!token) {
-        return res.status(404).json({
+        return res.status(401).json({
             success: false,
-            message: "Login First",
+            msg: "Authorization denied, token missing",
         });
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         console.log('decodeddd', decoded);
-        const user = yield user_1.User.findById(decoded._id).exec();
+        // const user = await User.findById(decoded.user._id).exec();
+        const user = yield User_1.User.findById(decoded._id).exec();
         console.log('userrrr', user);
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found",
+                msg: "User not found",
             });
         }
-        req.body.user = user;
+        // req.body.user = user;
+        req.rawTrailers.push(decoded._id);
+        // req.rawTrailers.push(decoded.user._id)
         next();
     }
     catch (error) {
         console.log('errorrrr', error);
         return res.status(401).json({
             success: false,
-            message: "Invalid Token",
+            msg: "Invalid Token",
         });
     }
 });
-exports.isAuthenticated = isAuthenticated;
 // import { Request, Response, NextFunction } from "express";
 // import { User, IUser } from "../models/user";
 // import jwt from "jsonwebtoken";

@@ -3,30 +3,41 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 export interface IBook extends Document {
     _id: ObjectId;
     // _id: mongoose.Types.ObjectId;
-    userId: mongoose.Types.ObjectId;
-    bookName: string;
-    bookId: string;
-    bookAuthor: string;
+    // userId: mongoose.Types.ObjectId;
+    user: mongoose.Types.ObjectId;
+    title: string;
+    // bookId: string;
+    author: string;
+    publicationYear: number;
+    genre: string;
     bookReviewText: string;
-    bookRating: string;
+    rating: number;
     createdAt: Date;
 }
 
-const BookReviewSchema: Schema = new Schema({
-    userId: { 
+const BookSchema: Schema = new Schema({
+    user: { 
         type: mongoose.Types.ObjectId, 
         ref: 'User', 
         required: true 
     },
-    bookName: {
+    title: {
         type: String,
         required: true,
     },
-    bookId: {
-        type: String,
+    // bookId: {
+    //     type: String,
+    //     required: true,
+    // },
+    author: {
         required: true,
+        type: String,
     },
-    bookAuthor: {
+    publicationYear: {
+        required: true,
+        type: Number,
+    },
+    genre: {
         required: true,
         type: String,
     },
@@ -34,14 +45,14 @@ const BookReviewSchema: Schema = new Schema({
         required: true,
         type: String,
     },
-    bookRating: {
+    rating: {
         required: true,
-        type: String,
+        type: Number,
     },
     createdAt: {
         type: Date,
         default: Date.now,
     },
-});
+})
 
-export const BookReview = mongoose.model<IBook>("BookReview", BookReviewSchema);
+export const Book = mongoose.model<IBook>("Book", BookSchema);

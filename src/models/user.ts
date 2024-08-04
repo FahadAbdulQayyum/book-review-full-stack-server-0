@@ -1,11 +1,17 @@
 import mongoose, { Schema, Document} from 'mongoose';
 
+interface Reviews {
+    bookId: string,
+    like: boolean
+}
+
 export interface IUser extends Document {
     _id: mongoose.Types.ObjectId;
     name: string;
     email: string;
     password: string;
     createdAt: Date;
+    reviews: Reviews[];
 }
 
 const UserSchema: Schema = new Schema({
@@ -26,6 +32,11 @@ const UserSchema: Schema = new Schema({
         type: Date,
         default: Date.now,
     },
+    reviews: [{
+        // type: [{ type: mongoose.Types.ObjectId, ref: 'Book' }],
+        bookId: String,
+        like: Boolean
+    }]
 });
 
 export default mongoose.model<IUser>("User", UserSchema);

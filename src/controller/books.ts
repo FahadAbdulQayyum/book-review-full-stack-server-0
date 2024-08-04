@@ -4,12 +4,38 @@ import Book from "../models/Book";
 // import Book from "@models/Book";
 import auth from "../middlewares/auth";
 import {check, validationResult} from "express-validator";
+import User from "../models/User";
+
+
+const router = express.Router();
+
+
+// @routes GET api/books/all
+// @desc Get all the books    
+// @access Public
+
+
+export const getAllBooks = async (req: Request, res: Response)=> {
+    try {
+        // const books = await Book.find({user: req.rawTrailers[0]}).sort({
+        //     date: -1
+        // });
+        const books = await Book.find({}).sort({
+            date: -1
+        });
+
+        res.json(books)
+    } catch (err: any) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+    }
+    
+}
+
 
 // @routes GET api/books
 // @desc Get all the user's books    
 // @access Private
-
-const router = express.Router();
 
 export const getBooks = router.get('/', auth ,async (req: Request, res: Response)=> {
     try {
@@ -66,6 +92,58 @@ export const addBook = router.post('/', auth, [
     res.status(500).send('Server Error')
 }
 })
+
+export const addReview = async(req: Request, res: Response)=> {
+
+    const {id} = req.params;
+
+console.log('req...', req, req.body, req.rawTrailers[0])
+
+    const { review } = req.body;
+    
+    try {
+    const user = await User.findById({_id:req.rawTrailers[0]})
+    if(!user){
+        return res.status(400).json({success:false, msg: 'User not found'})
+    }
+
+    // const alreadyReviewed = user.reviews.find(v=>v.bookId===id)
+
+    // console.log('alreadyRevieweded....', alreadyReviewed)
+    // if(alreadyReviewed){
+    //     user.reviews.filter(v=>v.bookId!==id)
+    //     user.save();
+    //     user.reviews.push({bookId: id, like: !review})
+    // }else{
+    //     user.reviews.push({bookId: id, like: review})
+    // }
+
+
+    // Find the index of the existing review
+    const existingReviewIndex = user.reviews.findIndex(v => v.bookId === id);
+    const existingReview = user.reviews.find(v => v.bookId === id);
+
+    if (existingReviewIndex !== -1) {
+        // Update the existing review
+        user.reviews[existingReviewIndex].like = existingReview!==undefined && !existingReview.like;
+    } else {
+        // Add a new review
+        user.reviews.push({ bookId: id, like: review });
+    }
+
+    // Save the updated user document
+    await user.save();
+
+
+    user.save();
+
+    res.json(user);
+    
+} catch (err: any) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+}
+}
 
 
 // @routes PUT api/books/:id

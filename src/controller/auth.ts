@@ -36,7 +36,8 @@ export const login: any = router.post('/', [
 ], async (req: Request, res: Response)=> {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+        // return res.status(400).json({errors: errors.array()});
+        return res.json({msg:'Fill the fields properly',errors: errors.array()});
     }
     
     const { email, password } = req.body;
@@ -47,13 +48,15 @@ export const login: any = router.post('/', [
         let user = await User.findOne({ email });
 
         if(!user) {
-            return res.status(400).json({ msg: "Invalid email", success: false});
+            return res.json({msg: 'Invalid email', success:false});            
+            // return res.status(401).json({ msg: "Invalid email", success: false});
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
 
         if(!isMatch){
-            return res.status(400).json({msg: 'Invalid password', success:false});            
+            // return res.status(401).json({msg: 'Invalid password', success:false});            
+            return res.json({msg: 'Invalid password', success:false});            
         }
 
         const payload = {

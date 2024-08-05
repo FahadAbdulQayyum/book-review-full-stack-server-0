@@ -4,7 +4,7 @@ import Book from "../models/Book";
 // import Book from "@models/Book";
 import auth from "../middlewares/auth";
 import {check, validationResult} from "express-validator";
-import User from "../models/User";
+import User, { IUser } from "../models/User";
 
 
 const router = express.Router();
@@ -145,6 +145,35 @@ console.log('req...', req, req.body, req.rawTrailers[0])
 }
 }
 
+// Function to fetch and process reviews data
+export const fetchReviewsData = async () => {
+    try {
+        const users: IUser[] = await User.find();
+        const reviewStats: { [key: string]: { bookId: string, totalLikes: number, totalDislikes: number } } = {};
+
+        users.forEach(user => {
+            user.reviews.forEach(review => {
+                if (!reviewStats[review.bookId]) {
+                    reviewStats[review.bookId] = {
+                        bookId: review.bookId,
+                        totalLikes: 0,
+                        totalDislikes: 0
+                    };
+                }
+                if (review.like) {
+                    reviewStats[review.bookId].totalLikes++;
+                } else {
+                    reviewStats[review.bookId].totalDislikes++;
+                }
+            });
+        });
+
+        return Object.values(reviewStats);
+    } catch (err) {
+        console.error(err);
+        throw new Error('Error fetching reviews data');
+    }
+};
 
 // @routes PUT api/books/:id
 // @desc Update a book

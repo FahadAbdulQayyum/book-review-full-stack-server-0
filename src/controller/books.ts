@@ -146,9 +146,9 @@ console.log('req...', req, req.body, req.rawTrailers[0])
 }
 
 // Function to fetch and process reviews data
-export const fetchReviewsData = async () => {
+export const fetchReviewsData = async (req: Request, res: Response) => {
     try {
-        const users: IUser[] = await User.find();
+        const users: IUser[] = await User.find({});
         const reviewStats: { [key: string]: { bookId: string, totalLikes: number, totalDislikes: number } } = {};
 
         users.forEach(user => {
@@ -168,7 +168,8 @@ export const fetchReviewsData = async () => {
             });
         });
 
-        return Object.values(reviewStats);
+        // return Object.values(reviewStats);
+        res.json({data:Object.values(reviewStats)});
     } catch (err) {
         console.error(err);
         throw new Error('Error fetching reviews data');
